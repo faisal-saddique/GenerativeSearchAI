@@ -1,0 +1,95 @@
+def upload_file_to_weaviate(user_id: str, file_instance, openai_api_key: str):
+    try:
+        file_extension = file_instance.name.split('.')[-1]
+        file_name = file_instance.name  # Extract the file name
+        file_id = file_instance.id  # Extract the file id
+        if file_extension.lower() == 'pdf':
+            # Handle PDF file
+            logging.info(f"Received PDF file: {file_name}")
+            temp_dir = tempfile.TemporaryDirectory()
+            temp_pdf_path = os.path.join(temp_dir.name, file_name)
+
+            # Save the uploaded PDF file temporarily
+            with open(temp_pdf_path, 'wb') as temp_pdf:
+                for chunk in file_instance.chunks():
+                    temp_pdf.write(chunk)
+
+            # Read the uploaded PDF file and store its text content in the 'text' variable
+            pdf_loader = PyMuPDFLoader(temp_pdf_path)
+            docs = pdf_loader.load()
+
+            if docs:
+                create_or_update_workspace_in_weaviate(user_id=user_id,
+                                                       file_id=file_id, docs=docs, openai_api_key=openai_api_key)
+                # Clean up the temporary directory and remove the temporary PDF file
+                temp_dir.cleanup()
+                return {"error": False, "message": "PDF content extracted successfully and pushed to weaviate."}
+            else:
+                # Clean up the temporary directory and remove the temporary PDF file
+                temp_dir.cleanup()
+                return {"error": False, "message": "Nothing found in the CSV to extract."}
+
+        elif file_extension.lower() == 'csv':
+            # Handle CSV file
+            logging.info(f"Received CSV file: {file_name}")
+            temp_dir = tempfile.TemporaryDirectory()
+            temp_csv_path = os.path.join(temp_dir.name, file_name)
+
+            # Save the uploaded CSV file temporarily
+            with open(temp_csv_path, 'wb') as temp_csv:
+                for chunk in file_instance.chunks():
+                    temp_csv.write(chunk)
+
+            loader = CSVLoader(file_path=temp_csv_path)
+
+            data = loader.load()
+
+            create_or_update_workspace_in_weaviate(
+                file_id=file_id, docs=data, openai_api_key=openai_api_key)
+
+            # Clean up the temporary directory and remove the temporary CSV file
+            temp_dir.cleanup()
+
+            return {"error": False, "message": "CSV content processed successfully."}
+
+        elif file_extension.lower() == 'docx':
+            # Handle CSV file
+            logging.info(f"Received DOCX file: {file_name}")
+            temp_dir = tempfile.TemporaryDirectory()
+            temp_docx_path = os.path.join(temp_dir.name, file_name)
+
+            # Save the uploaded CSV file temporarily
+            with open(temp_docx_path, 'wb') as temp_csv:
+                for chunk in file_instance.chunks():
+                    temp_csv.write(chunk)
+
+            loader = Docx2txtLoader(file_path=temp_docx_path)
+            data = loader.load()
+
+            create_or_update_workspace_in_weaviate(
+                file_id=file_id, docs=data, openai_api_key=openai_api_key)
+
+            # Clean up the temporary directory and remove the temporary DOCX file
+            temp_dir.cleanup()
+
+            return {"error": False, "message": "DOCX content processed successfully."}
+        else:
+            return {"error": True, "message": "Invalid file format. Please upload a valid file format."}
+
+    except Exception as e:
+        logging.exception(e)
+        return {"error": True, "message": f"File processing failed! Error: {e}"}
+
+
+def upload_link_to_weaviate(user_id: str, link: str, file_id: str, openai_api_key: str):
+    scraped_content = scrape_url(url=link)
+    if scraped_content:
+        docs = [
+            Document(page_content=scraped_content,
+                     metadata={'source': link})
+        ]
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=0)
+        new_docs = text_splitter.split_documents(docs)
+        return create_or_update_workspace_in_weaviate(user_id=user_id,file_id=file_id,docs=new_docs,openai_api_key=openai_api_key)
+    else:
+        return "Not enough content to index."
