@@ -15,7 +15,7 @@ GenerativeSearchAI is a system designed to scrape web content, convert it to mar
 To install GenerativeSearchAI, you need to have Python installed on your system. Clone the repository and install the required dependencies:
 
 ```bash
-git clone https://github.com/your-repo/GenerativeSearchAI.git
+git clone https://github.com/faisal-saddique/GenerativeSearchAI.git
 cd GenerativeSearchAI
 pip install -r requirements.txt
 ```
