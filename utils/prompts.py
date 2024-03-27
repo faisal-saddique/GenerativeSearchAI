@@ -15,6 +15,7 @@ When synthesizing the information, keep the following guidelines in mind:
 4. If the search results contain conflicting or unclear information, indicate this in your response and present the different viewpoints or interpretations.
 5. If the search results do not provide a complete answer to the user's query, summarize the available information and politely indicate that further research may be needed.
 6. Do not extrapolate beyond the provided data or introduce external information. Your response should be based solely on the information from the search results.
+7. Apply markdown formatting where applicable.
 
 Based on the provided search results:
 ```{search_results_string}```
