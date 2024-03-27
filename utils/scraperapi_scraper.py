@@ -4,6 +4,7 @@ import requests
 from urllib.parse import urlsplit
 import html2text
 from dotenv import load_dotenv
+import streamlit as st
 
 # Load environment variables
 load_dotenv()
@@ -32,7 +33,7 @@ def scrape_and_convert_to_markdown(url):
     api_key = os.getenv('SCRAPERAPI_KEY')
     if not api_key:
         raise ValueError("API key not found in environment variables.")
-
+    st.success(api_key)
     payload = {
         'api_key': api_key,
         'url': url,
@@ -45,16 +46,16 @@ def scrape_and_convert_to_markdown(url):
         response = requests.get('https://api.scraperapi.com/', params=payload)
         response.raise_for_status()  # Raise an HTTPError if the HTTP request returned an unsuccessful status code
     except requests.exceptions.HTTPError as http_err:
-        print(f"HTTP error occurred: {http_err}")
+        st.error(f"HTTP error occurred: {http_err}")
         return None
     except requests.exceptions.ConnectionError as conn_err:
-        print(f"Connection error occurred: {conn_err}")
+        st.error(f"Connection error occurred: {conn_err}")
         return None
     except requests.exceptions.Timeout as timeout_err:
-        print(f"Timeout error occurred: {timeout_err}")
+        st.error(f"Timeout error occurred: {timeout_err}")
         return None
     except requests.exceptions.RequestException as req_err:
-        print(f"Error during requests to {url}: {req_err}")
+        st.error(f"Error during requests to {url}: {req_err}")
         return None
 
     html_content = response.text

@@ -5,7 +5,8 @@ import streamlit as st
 
 load_dotenv()
 
-@st.cache_data(ttl="1h")
+
+# @st.cache_data(ttl="1h")
 def get_class_names_weaviate():
     WEAVIATE_URL = os.getenv("WEAVIATE_URL")
     auth_client_secret = weaviate.AuthApiKey(api_key=os.getenv("WEAVIATE_API_KEY"))

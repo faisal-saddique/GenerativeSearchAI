@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-class_name = "GSC_test"
+class_name = "Testing"
 
 WEAVIATE_URL = os.getenv("WEAVIATE_URL")
 auth_client_secret = weaviate.AuthApiKey(api_key=os.getenv("WEAVIATE_API_KEY"))

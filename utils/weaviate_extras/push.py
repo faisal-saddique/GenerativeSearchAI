@@ -1,24 +1,17 @@
 # Import required libraries
-from langchain.document_loaders import (
-    PyMuPDFLoader,  # For loading PDF files
-    DirectoryLoader,  # For loading files from a directory
-    TextLoader,  # For loading plain text files
-    Docx2txtLoader,  # For loading DOCX files
-    UnstructuredPowerPointLoader,  # For loading PPTX files
-    UnstructuredExcelLoader  # For loading XLSX files
-)
-from langchain.schema import Document
-from langchain.document_loaders import DirectoryLoader, TextLoader
-from langchain.document_loaders.csv_loader import CSVLoader  # For loading CSV files
-from langchain.text_splitter import RecursiveCharacterTextSplitter  # For splitting text into smaller chunks
 from dotenv import load_dotenv  # For loading environment variables from .env file
 import os
 import weaviate
-from langchain.retrievers.weaviate_hybrid_search import WeaviateHybridSearchRetriever
-
+from langchain_core.documents import Document
+from langchain_community.retrievers import (
+    WeaviateHybridSearchRetriever,
+)
 # Load environment variables from .env file
 load_dotenv()
 
+print(os.getenv("WEAVIATE_URL"))
+print(os.getenv("WEAVIATE_API_KEY"))
+      
 WEAVIATE_URL = os.getenv("WEAVIATE_URL")
 auth_client_secret = weaviate.AuthApiKey(api_key=os.getenv("WEAVIATE_API_KEY"))
 

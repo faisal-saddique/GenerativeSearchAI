@@ -45,7 +45,6 @@ def create_or_update_workspace_in_weaviate(docs: List[Document], base_url) -> st
     # Remove symbols from the base URL and convert the result to uppercase
     clean_base_url = re.sub(r'[^\w\s]', '', extract_base_url(url=base_url)).upper()
     index_name = f"GSC_{clean_base_url}"
-    st.write(f"Index name for Weaviate set to: {index_name}")
 
     retriever = WeaviateHybridSearchRetriever(
         client=client,
@@ -74,7 +73,7 @@ def create_or_update_workspace_in_weaviate(docs: List[Document], base_url) -> st
             logging.exception(f"Failed to push chunk {chunk_number}: {e}")
             st.error(f"Failed to push chunk {chunk_number}.")
     
-    st.success("All documents have been successfully indexed in Weaviate.")
+    st.success("Done pushing chunks to weaviate!")
     return "Done!"
 
 def query_weaviate(query: str, top_k: int, selected_class) -> List[Document]:
