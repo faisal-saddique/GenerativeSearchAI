@@ -4,6 +4,14 @@ import re
 from utils.get_class_names_weaviate import get_class_names_weaviate
 from utils.get_openai_response import get_openai_response
 
+# Set up the Streamlit page configuration
+st.set_page_config(
+    page_title="Generative AI Search",
+    page_icon="🔍",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 # Define a placeholder image URL
 placeholder_image_url = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
 

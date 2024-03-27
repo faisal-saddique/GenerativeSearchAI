@@ -1,5 +1,13 @@
 import streamlit as st
 
+# Set up the Streamlit page configuration
+st.set_page_config(
+    page_title="Generative AI Search",
+    page_icon="🔍",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 st.title("Downloaded Sitemaps")
 
 if "downloaded_sitemaps" in st.session_state:

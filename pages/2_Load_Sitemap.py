@@ -5,6 +5,13 @@ from utils.scraperapi_scraper import scrape_and_convert_to_markdown
 from utils.create_documents import create_documents
 from utils.weaviate_utils import create_or_update_workspace_in_weaviate
 
+# Set up the Streamlit page configuration
+st.set_page_config(
+    page_title="Generative AI Search",
+    page_icon="🔍",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 # Set up the Streamlit app title and sidebar
 st.sidebar.title("Options")
 
